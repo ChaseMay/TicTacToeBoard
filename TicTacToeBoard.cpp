@@ -19,30 +19,51 @@ TicTacToeBoard::TicTacToeBoard()
 **/
 Piece TicTacToeBoard::toggleTurn()
 {
+  if(turn == X){
+    return turn = X;
+  }
+  else if(turn == O){
+    return turn = O;
+  }
   return Invalid;
 }
 
 /**
  * Places the piece of the current turn on the board, returns what
- * piece is placed, and toggles which Piece's turn it is. placePiece does 
+ * piece is placed, and toggles which Piece's turn it is. placePiece does
  * NOT allow to place a piece in a location where there is already a piece.
- * In that case, placePiece just returns what is already at that location. 
+ * In that case, placePiece just returns what is already at that location.
  * Out of bounds coordinates return the Piece Invalid value. When the game
  * is over, no more pieces can be placed so attempting to place a piece
  * should neither change the board nor change whose turn it is.
-**/ 
-Piece TicTacToeBoard::placePiece(int row, int column)
-{
-  return Invalid;
+**/
+Piece TicTacToeBoard::placePiece(int row, int column){
+  if(row < BOARDSIZE){
+    if(column < BOARDSIZE){
+      if(board[row][column] == Blank){
+        return turn = toggleTurn();
+      }
+      else{
+        return board[row][column];
+      }
+    }
+  }
+  else{
+    return Invalid;
+  }
 }
 
 /**
  * Returns what piece is at the provided coordinates, or Blank if there
  * are no pieces there, or Invalid if the coordinates are out of bounds
 **/
-Piece TicTacToeBoard::getPiece(int row, int column)
-{
-  return Invalid;
+Piece TicTacToeBoard::getPiece(int row, int column){
+  if(row > 2){
+    if(column > 2){
+      return Invalid;
+    }
+  }
+  return board[row][column];
 }
 
 /**
@@ -51,5 +72,49 @@ Piece TicTacToeBoard::getPiece(int row, int column)
 **/
 Piece TicTacToeBoard::getWinner()
 {
-  return Invalid;
+  //Top Row, the tactic in each of these is to check middle piece with outer pieces and return it
+  if(board[0][0] == board[0][1] && board[0][1] == board[0][2]){
+    return board[0][0];
+  }
+  //Middle Row, Example Below:
+  // O O X
+  // X X X
+  //   O
+  if(board[1][0] == board[1][1] && board[1][1] == board[1][2]){
+    return board[1][0];
+  }
+  //Bottom Row
+  if(board[2][0] == board[2][1] && board[2][1] == board[2][2]){
+    return board[2][0];
+  }
+  //Left column
+  if(board[0][0] == board[1][0] && board[1][0] == board[2][0]){
+    return board[0][0];
+  }
+  //Middle column
+  if(board[0][1] == board[1][1] && board[1][1] == board[2][1]){
+    return board[0][1];
+  }
+  //Right Column
+  if(board[0][2] == board[1][2] && board[1][2] == board[2][2]){
+    return board[0][2];
+  }
+  //Right Diagonal
+  if(board[0][0] == board[1][1] && board[1][1] == board[2][2]){
+    return board[0][0];
+  }
+  //Left Diagonal
+  if(board[2][0] == board[1][1] && board[1][1] == board[0][2]){
+    return board[2][0];
+  }
+  //Blank Check
+  for(int i = 0; i < BOARDSIZE; i++){
+    for(int j = 0; j < BOARDSIZE; j++){
+      if(board[i][j] == Blank)
+        //Return blank if board is blank
+        return Blank;
+    }
+    //Return invalid if it hits none of the checks
+    return Invalid;
+  }
 }
